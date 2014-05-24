@@ -1,0 +1,13 @@
+{% extends "default.html" %}
+{% block title %} Login {% endblock %}
+{% block body %}
+        <p> Please Login With Your Login </p>
+        {% if error %} <div class="error"> {{ error }} </div> {% endif %}
+        <form action="" method="POST">
+
+        <p> username <input type="text" name="username"></p>
+        <p> password <input type="password" name="password"></p>
+        <p><input type="submit" value="Login"></p>
+
+        </form>
+{% endblock %}
