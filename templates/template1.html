@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='styles/style.css')}}"/>
+    <title>Something</title>
+
+</head>
+<body>
+<p>
+
+  <h1>
+    Hello World
+  </h1>
+
+{% if id %}
+
+The thing is...{{ id }}
+{% else %}
+The thing is not a thing
+{% endif %}
+
+</p>
+
+<form method="post" action="">
+    <input type="text" name="id"/>
+    <input type="submit"/>
+
+</form>
+
+</body>
+</html>

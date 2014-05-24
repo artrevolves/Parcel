@@ -1,51 +1,33 @@
 from flask import Flask, render_template, redirect, url_for, request
 import sqlite3
-from flask import g
+import database
 
 app = Flask(__name__)
 
 # Configuration
+PATH = "Database.db"
 
 app.config.from_object(__name__)
 
-PATH = "Database.db"
-list = ['UserTable', ['username TEXT','id INTEGER','password TEXT','timezone TEXT','country TEXT','email TEXT']]
 
-def get_db():
-    db = getattr(g, '_database', None)
-    if db is None:
-        db = g._database = sqlite3.connect(PATH)
-    return db
-
-def get_con():
-    return get_db().cursor()
-
-def create_db():
-    con = get_con()
-
-    try:
-        con.execute('SELECT * FROM "' + list[0] + '"')
-    except:
-        query = 'CREATE TABLE "' + list[0] + '" (' + ','.join(list[1]) + ')'
-        print query
-        con.execute(query)
-    get_db().commit()
-
-def add_user(username,id,password,timezone,country,email):
-    create_db()
-    get_con().execute('INSERT INTO UserTable VALUES (?,?,?,?,?,?)', [username,id,password,timezone,country,email])
-    get_db().commit()
+#homepage
 @app.route('/')
 def hello_world():
-    return 'Super Awesome Application'
+    # print database.get_db()
+    return render_template('homepage.html')
+
+#register page
+@app.route('/register')
+def register_page():
+    # print database.get_db()
+    return render_template('register.html')
 
 #tests stupid shit yay
 @app.route('/messages',methods=['GET','POST'])
 @app.route('/messages/<id>')
 def show_messages(id=None):
     if request.method=='GET':
-        add_user("testUser",'12',"1234","132","fdsaf","dsfa")
-        return render_template('template1.html',id="fuckfuck")
+        return render_template('template1.html',id=id)
     if request.method=='POST':
         return render_template('template1.html',id=request.form['id'])
 

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+
+{% if request.method=='GET' %}
+
+
+<form method="post" action="">
+    <input type="text" name="message"/>
+    <input type="submit"/>
+
+</form>
+
+{% elif request.method=='POST' %}
+
+<p>
+    {% if request.form['message'] %}
+    The message is...{{request.form['message']}}
+    {% else %}
+    <form method="post" action="">
+    <input type="text" name="message"/>
+    <input type="submit"/> </form>
+    *The above field is required
+    {% endif %}
+</p>
+
+{% endif %}
+
+
+</body>
+</html>

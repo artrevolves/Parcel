@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='styles/style.css')}}"/>
+    <title>
+        parcel: {% block title %} Insert New Title Here {% endblock %}
+    </title>
+</head>
+<body>
+    <div id="wrapper">
+        <h1>
+            PARCEL
+        </h1>
+        <nav>
+            <a href="{{url_for('show_messages')}}"> Message thingy </a>
+        </nav>
+        <div id="body">
+            {% block body %}{% endblock %}
+        </div>
+    </div>
+Copyright Parcel 2014
+</body>
+
+</html>
