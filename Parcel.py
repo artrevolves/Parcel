@@ -97,7 +97,7 @@ def forms_test():
 
 @app.errorhandler(404)
 def page_not_found(error):
-    return 'The page you have requested is not able to be found you piece of awesomeness.'
+    return error
 
 
 if __name__ == '__main__':

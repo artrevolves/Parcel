@@ -1,1 +1,1 @@
-import this
+print 'INSERT INTO ' +'users' +' VALUES ('+','.join(['?' for x in xrange(len(['John', 123]))])+')'

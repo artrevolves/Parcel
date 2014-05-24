@@ -1,13 +1,20 @@
-{% extends "default.html" %}
-{% block title %} Login {% endblock %}
-{% block body %}
-        <p> Please Login With Your Login </p>
-        {% if error %} <div class="error"> {{ error }} </div> {% endif %}
-        <form action="" method="POST">
-
-        <p> username <input type="text" name="username"></p>
-        <p> password <input type="password" name="password"></p>
-        <p><input type="submit" value="Login"></p>
-
-        </form>
-{% endblock %}
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Login Form</title>
+  <link rel="stylesheet" href="static/login/style.css">
+</head>
+<body>
+  <section class="container">
+    <div class="login">
+      <h1>Login to Web App</h1>
+      <form method="post" action="">
+        <p><input type="text" name="username" value="" placeholder="Username or Email"></p>
+        <p><input type="password" name="password" value="" placeholder="Password"></p>
+        </p>
+        <p class="submit"><input type="submit" name="commit" value="Login"></p>
+      </form>
+    </div>
+  </section>
+</body>
+</html>
