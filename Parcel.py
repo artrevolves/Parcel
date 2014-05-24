@@ -66,16 +66,12 @@ def login_page():
                                  
         if user is None:
             return render_template('login.html', error="Username or password is incorrect")
-
-        user_ID = user[0]
-        username = user[1]
-        password_hash = user[3]
         
-        if not check_password_hash(password_hash, request.form['password']):
+        if not check_password_hash(user['pw_hash'], request.form['password']):
             return render_template('login.html', error="Username or password is incorrect")
 
-        session['user_id'] = user_ID
-        return show_message("Oh hai " + username)
+        session['user_id'] = user['user_id']
+        return show_message("Oh hai " + str(user['username']))
         
     return render_template('login.html')
 
