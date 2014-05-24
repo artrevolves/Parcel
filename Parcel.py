@@ -26,11 +26,23 @@ app.secret_key = app.config['SECRET_KEY']
 def home_page():
     return render_template('homepage.html')
 
+# Grab the current logged in user at the beginning of each request.
+# Use g.user whenever you want to access the currently logged in user
+@app.before_request
+def fetch_user():
+    g.user = None
+    if 'user_id' in session:
+        g.user = database.query_db('select * from user where user_id=?',
+                                   [session['user_id']], one=True)
+
 # --------------------------------------------------------------------------
 # REGISTRATION PAGE
 # --------------------------------------------------------------------------
 @app.route('/register', methods=['GET', 'POST'])
 def register_page():
+    # if user is logged in, don't let them see the page at all
+    if g.user: return show_message('You already have an account here, moron')
+    
     if request.method == 'POST':
         if not request.form['username']:
             return render_template('register.html', error="Username is required")
@@ -38,7 +50,7 @@ def register_page():
             return render_template('register.html', error="Please enter a valid email")
         elif not request.form['password']:
             return render_template('register.html', error="Please enter a password")
-        elif request.form['password'] !=request.form['password2']:
+        elif request.form['password'] != request.form['password2']:
             return render_template('register.html', error=" Please make sure your passwords match")
         # TODO: check for username being identical here
         
@@ -58,7 +70,7 @@ def register_page():
 @app.route('/login', methods=['GET', 'POST'])
 def login_page():
     # if user is logged in, don't let them see the page at all
-    # if g.user: return 'You have already been logged in'
+    if g.user: return show_message('You have already been logged in, ' + g.user['username'])
     
     if request.method=='POST':
         user = database.query_db('select * from user where username=?', 
@@ -81,7 +93,7 @@ def login_page():
 @app.route('/logout')
 def logout_page():
     session.pop('user_id', None)
-    return show_message("You have successfully loggedin yourself out!")
+    return show_message("You have successfully logged yourself out!")
 
 # --------------------------------------------------------------------------
 # MESSAGE PAGE (FOR DEBUGGING)

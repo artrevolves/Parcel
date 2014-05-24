@@ -12,9 +12,13 @@
             PARCEL
         </h1>
         <nav>
+		{% if g.user %}
+			Hello, {{ g.user['username'] }} (<a href="{{url_for('logout_page')}}">Log Out</a>)
+		{% else %}
             <a href="{{url_for('login_page')}}">Login</a>
             <a href="{{url_for('register_page')}}">Register</a>
-        </nav>
+        {% endif %}
+		</nav>
         <div id="body">
             {% block body %}{% endblock %}
         </div>
