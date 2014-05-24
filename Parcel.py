@@ -1,14 +1,15 @@
 from flask import Flask, render_template, redirect, url_for, request, g, session
-from werkzeug import check_password_hash, generate_password_hash
+
 
 import sqlite3
+from werkzeug.security import generate_password_hash, check_password_hash
 import database
 
 app = Flask(__name__)
 
 # Configuration
 PATH = "Database.db"
-
+app.secret_key = "sdafdsafdasfdsafsdaf"
 app.config.from_object(__name__)
 
 
@@ -37,8 +38,7 @@ def register_page():
             db=database.get_db()
             parameters=[request.form['username'], request.form['email'], generate_password_hash(request.form['password']),
                         request.form['timezone']]
-            db.execute('insert into user (username, email, pw_hash, timezone) values (?,?,?,?)', parameters )
-            db.commit()
+            database.add_user(parameters[0],parameters[1],parameters[2],parameters[3])
             return redirect(url_for('login_page'))
 
     return render_template('register.html', error=error)
@@ -52,13 +52,15 @@ def login_page():
     if request.method=='POST':
         user=database.query_db('select * from user where username=?', [request.form['username']], one=True)
         if user is None:
-            error='wrong username'
-        elif not check_password_hash(user['pw_hash'], request.form['password']):
-            error='password wrong'
+            error='Username or password incorrect'
         else:
-            session['user_id']=user['user_id']
-            #directing to the messages page
-            return redirect(url_for('show_messages', id=user['username']))
+            if not check_password_hash(user[3], request.form['password']):
+                error='Username or password incorrect'
+            else:
+                print 'Success!! Connecting'
+                session['user_id']=user[0]
+                #directing to the messages page
+                return redirect(url_for('show_messages', id=user[1]))
     return render_template('login.html', error=error)
 
 #logout function
