@@ -8,6 +8,7 @@
   <section class="container">
     <div class="login">
       <h1>Login to Web App</h1>
+	  {% if error %} <div class="error"> {{ error }} </div> {% endif %}
       <form method="post" action="">
         <p><input type="text" name="username" value="" placeholder="Username or Email"></p>
         <p><input type="password" name="password" value="" placeholder="Password"></p>
