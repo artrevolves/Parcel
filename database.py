@@ -25,6 +25,24 @@ def query_db(query, args=(), one=False):
     return (rv[0] if rv else None) if one else rv
 
 
+def insert_into(table, fields, args=[]):
+    db = get_db()
+    db.execute('INSERT INTO ' + table +" ("+ ','.join(fields) + ') VALUES (' + ','.join(['?' for x in xrange(len(args))]) + ')', args)
+    db.commit()
+
+
+def add_user(username, email, pw_hash, timezone):
+    insert_into('user', ['username','email', 'pw_hash', 'timezone'],[username, email, pw_hash, timezone])
+
+
+def add_conversation(user1_id, user2_id, title, post_day, post_time):
+    insert_into('conversation',['user1_id','user2_id', 'title', 'post_day','post_time'] ,[user1_id, user2_id, title, post_day, post_time])
+
+
+def add_message(conversation_id, sender_id, receiver_id, message_text, message_timestamp, is_draft):
+    insert_into('message', ['conversation_id','sender_id', 'receiver_id', 'message_text','message_timestamp','is_draft'],[conversation_id, sender_id, receiver_id, message_text, message_timestamp, is_draft])
+
+
 def get_con():
     return get_db().cursor()
 
