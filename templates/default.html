@@ -1,29 +1,266 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='styles/style.css')}}"/>
-    <title>
-        parcel: {% block title %} Insert New Title Here {% endblock %}
-    </title>
-</head>
-<body>
-    <div id="wrapper">
-        <h1>
-            PARCEL
-        </h1>
-        <nav>
-		{% if g.user %}
-			Hello, {{ g.user['username'] }} (<a href="{{url_for('logout_page')}}">Log Out</a>)
-		{% else %}
-            <a href="{{url_for('login_page')}}">Login</a>
-            <a href="{{url_for('register_page')}}">Register</a>
-        {% endif %}
-		</nav>
-        <div id="body">
-            {% block body %}{% endblock %}
-        </div>
-    </div>
-Copyright Parcel 2014
-</body>
+<!DOCTYPE HTML>
 
+<html>
+
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<!--Google Fonts-->
+<link href='http://fonts.googleapis.com/css@family=Open+Sans_3A400,300,300italic,400italic,600,600italic,700,700italic' rel='stylesheet' type='text/css'>
+
+<!-- *************************************************************************
+**************************   STYLE SHEET   *******************************
+************************************************************************** -->
+
+<link href="{{url_for('static', filename='css/main.css')}}" rel="stylesheet" type="text/css" />
+<link href="{{url_for('static', filename='css/jquery.fancybox.css')}}" rel="stylesheet" type="text/css />"
+
+<!--[if IE 7 ]>    <html class= "ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html class= "ie8"> <![endif]-->
+<!--[if IE 9 ]>    <html class= "ie9"> <![endif]-->
+
+<!--[if lt IE 9]>
+   <script>
+      document.createElement('header');
+      document.createElement('nav');
+      document.createElement('section');
+      document.createElement('article');
+      document.createElement('aside');
+      document.createElement('footer');
+   </script>
+<![endif]-->
+
+ <title>
+        parcel app: {% block title %} Random Placeholder Content {% endblock %}
+    </title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+
+ <!-- *************************************************************************
+*****************                FAVICON               ********************
+************************************************************************** -->
+
+<link href="{{url_for('static', filename='img/favicon.png')}}" rel="shortcut icon" />
+
+<!--[if lt IE 9]>
+<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+
+
+<!-- *************************************************************************
+**************************        JS       *******************************
+************************************************************************** -->
+<script type="text/javascript" src="{{url_for('static', filename='js/jquery.js')}}"> </script>
+<script type="text/javascript" src="{{url_for('static', filename='js/jquery.flexslider-min.js')}}"> </script>
+<script type="text/javascript" src="{{url_for('static', filename='js/jquery.easing.1.3.js')}}"> </script>
+<script type="text/javascript" src="{{url_for('static', filename='js/hoverIntent.js')}}"> </script>
+<script type="text/javascript" src="{{url_for('static', filename='js/jquery.sfmenu.js')}}"> </script>
+<script type="text/javascript" src="{{url_for('static', filename='js/retina.js')}}"> </script>
+<script type="text/javascript" src="{{url_for('static', filename='js/custom.js')}}"> </script>
+<script type="text/javascript" src="{{url_for('static', filename='js/jquery.fancybox.js')}}"> </script>
+
+
+
+<!-- *************************************************************************
+******************     THESE ARE THE SCRIPT CALLS    ***********************
+************************************************************************** -->
+<script type="text/javascript">
+jQuery(window).load(function() {
+	
+jQuery('.slider').flexslider();
+ 
+// Create the dropdown base
+jQuery("<select />").appendTo(".topmenu");
+
+// Create default option "Go to..."
+jQuery("<option />", {
+ "selected": "selected",
+ "value"   : "",
+ "text"    : "Menu"
+}).appendTo(".topmenu select");
+
+// Populate dropdown with menu items
+jQuery(".topmenu a").each(function() {
+var el = jQuery(this);
+jQuery("<option />", {
+   "value"   : el.attr("href"),
+   "text"    : el.text()
+}).appendTo(".topmenu select");
+});
+
+// To make dropdown actually work
+// To make more unobtrusive: http://css-tricks.com/4064-unobtrusive-page-changer/
+jQuery(".topmenu select").change(function() {
+window.location = jQuery(this).find("option:selected").val();
+});
+	
+jQuery('.fancybox').fancybox();
+	
+});
+	
+</script>
+
+</head>
+
+<body>
+
+<!-- Start of top wrapper -->
+<div id="top_wrapper">
+
+<!-- Start of content wrapper -->
+<div class="content_wrapper">
+
+<!-- Start of topsubmenu -->
+<div class="topsubmenu">
+
+<ul>
+      {% if g.user %}
+         Hello, {{ g.user['username'] }} (<a href="{{url_for('logout_page')}}">Log Out</a>
+      {% else %}
+<li><a href="{{url_for('login_page')}}">LOGIN </a></li>
+<li><a href="{{url_for('register_page')}}">REGISTER</a></li>
+</ul>
+      {% endif %}
+
+</div><!-- End of topsubmenu -->
+
+
+
+</div><!-- End of content wrapper -->
+
+<!-- Clear Fix --><div class="clear"></div>
+
+</div><!-- End of top wrapper -->
+
+<!-- Start of header wrapper -->
+<div id="header_wrapper">
+
+<!-- Start of content wrapper -->
+<div class="content_wrapper">
+
+<!-- Start of logo -->
+<div id="logo">
+<a href="#"><img src="{{url_for('static', filename='img/toplogo.png')}}" width="213" height="33" alt="Business Essentials" /></a>
+
+</div><!-- End of logo -->
+
+<!-- Start of top menu wrapper -->
+<div class="topmenuwrapper">
+
+<!-- Start of topmenu -->
+<nav class="topmenu">
+ 
+<ul class="sf-menu">
+
+<li><a class="active" href="{{url_for('home_page')}}">Home</a>
+</li>
+
+<li><a href="{{url_for('login_page')}}">LOGIN </a></li>
+
+<li><a href="{{url_for('register_page')}}">REGISTER</a></li>
+
+</ul>
+
+</nav><!-- End of topmenu -->
+
+<!-- Start of header phone -->
+<div class="header_phone">
+Support@parcel-time.com
+
+</div><!-- End of header phone -->
+
+<!-- Clear Fix --><div class="clear"></div>
+
+</div><!-- End of top menu wrapper -->
+
+
+</div><!-- End of content wrapper -->
+
+<!-- Clear Fix --><div class="clear"></div>
+
+</div><!-- End of header wrapper -->
+
+<!-- Start of message wrapper -->
+<div id="message_wrapper">
+
+<!-- Start of content wrapper -->
+<div class="content_wrapper">
+
+<!-- Start of contentleft -->
+<div class="contentleft">
+<p>Register today for a free account</p>
+
+</div><!-- End of contentleft -->
+
+<!-- Start of contentright -->
+<div class="contentright">
+
+</div><!-- End of contentright -->
+
+</div><!-- End of content wrapper -->
+
+<!-- Clear Fix --><div class="clear"></div>
+
+</div><!-- End of message wrapper -->
+
+<!-- Start of content wrapper -->
+<div id="contentwrapper">
+
+<!-- Start of content wrapper -->
+<div class="content_wrapper">
+{% block body %}{% endblock %}
+</div>
+
+<!-- Start of bottom wrapper -->
+<div id="bottom_wrapper">
+
+<!-- Start of content wrapper -->
+<div class="content_wrapper">
+
+<!-- Start of one fourth first -->
+<div class="one_fourth_first">
+<h5>Links</h5>
+
+<ul>
+<li><a href="{{url_for('login_page')}}">LOGIN </a></li>
+<li><a href="{{url_for('register_page')}}">REGISTER</a></li>
+</ul>
+
+</div><!-- End of one fourth first -->
+
+
+</div><!-- End of content wrapper -->
+
+<!-- Clear Fix --><div class="clear"></div>
+
+</div><!-- End of bottom wrapper -->
+
+<!-- Start of copyright wrapper -->
+<div id="copyright_wrapper">
+
+<!-- Start of content wrapper -->
+<div class="content_wrapper">
+
+<!-- Start of copyright message -->
+<div class="copyright_message">
+&copy; 2014 Parcel App Irvine, CA USA
+
+</div><!-- End of copyright message -->
+
+<!-- Start of social icons -->
+<div class="social_icons">
+
+
+</div><!-- End of social icons -->
+
+</div><!-- End of content wrapper -->
+
+<!-- Clear Fix --><div class="clear"></div>
+
+</div><!-- End of copyright wrapper -->
+
+</body>
 </html>
