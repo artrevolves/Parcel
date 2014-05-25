@@ -1,0 +1,25 @@
+{% extends "default.html" %}
+
+{% block title %} Conversation view {% endblock %}
+
+{% block body %}
+	<a href="{{url_for('conv_list_page')}}">&lt; Back to conversation list</a>
+	
+    <h2>Conversation ID #{{ conversation['conversation_id'] }}: {{ conversation['title'] }}</h2>
+	
+	<form action="" method="POST">
+		<p><textarea rows="4" cols="50" name="text"></textarea></p>
+		<p><input type="submit" value="Save draft"></p>
+	</form>
+    
+	{% for message in messages %}
+		<p>
+			<b>From {{ message['sender_id'] | username_from_id }} at 
+			   {{ message['message_timestamp'] | pretty_date }}</b><br>
+			{{ message['message_text'] }}
+		</p>
+	{% else %}
+		<p>This conversation has no messages</p>
+	{% endfor %}
+	
+{% endblock %}

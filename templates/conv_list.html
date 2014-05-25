@@ -1,15 +1,20 @@
 {% extends "default.html" %}
+
 {% block title %} Conversation list {% endblock %}
+
 {% block body %}
-        <p>{{ g.user['username'] }}'s conversations</p>
-		<a href="{{url_for('conv_add_page')}}">Add</a>
+        <h2>{{ g.user['username'] }}'s conversations</h2>
+		<a href="{{url_for('conv_add_page')}}">Add a conversation</a>
+		
         {% for item in conversations %}
-		<p><b>title: </b>{{ item['title'] }}<br>
-		<b>recipient: </b>{{ item['user2_id'] }}<br>
-		<b>post day: </b>{{ item['post_day'] }}<br>
-		<b>post time: </b>{{ item['post_time'] }}<br></p>
-		<a href="/conv_view/{{ item['conversation_id'] }}">View</a>
+			<p>
+				<b>{{ item['title'] }}</b><br>
+				<b>Recipient: </b>{{ item['user2_id'] | username_from_id }}<br>
+				<b>Post day: </b>{{ item['post_day'] }}<br>
+				<b>Post time: </b>{{ item['post_time'] }}<br>
+				<a href="/conv_view/{{ item['conversation_id'] }}">View</a>
+			</p>
 		{% else %}
-		<p>You have no conversations</p>
+			<p>You have no conversations</p>
 		{% endfor %}
 {% endblock %}

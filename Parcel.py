@@ -6,6 +6,8 @@
 from flask import Flask, render_template, redirect, url_for, request, g, session
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
+from datetime import datetime
+import time
 
 import database
 
@@ -35,6 +37,16 @@ def fetch_user():
         g.user = database.query_db('select * from user where user_id=?',
                                    [session['user_id']], one=True)
 
+@app.template_filter()
+def username_from_id(id):
+    q = database.query_db('select * from user where user_id=?',
+                      [id], one=True)
+    return "n/a" if not q else q["username"]
+    
+@app.template_filter()
+def pretty_date(timestamp):
+    return datetime.utcfromtimestamp(timestamp).strftime("%m/%d/%Y %H:%M")
+    
 # --------------------------------------------------------------------------
 # REGISTRATION PAGE
 # --------------------------------------------------------------------------
@@ -139,11 +151,24 @@ def conv_add_page():
 @app.route('/conv_view/<conv_id>', methods=['GET', 'POST'])
 def conv_view(conv_id=None):
     if not g.user: return show_message('You need to be logged in to see this page.')
-
+    
+    conversation = database.query_db("select * from conversation where conversation_id=?",
+                                     [conv_id], one=True)   
+  
+    # posting a draft
     if request.method == 'POST':
-        return show_message('FFFFFFFFFFFFFUUUUUUUUUUUUUUUUUUU.')
-        
-    return show_message('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA.')
+        database.add_message(conv_id, 
+                             g.user["user_id"], 
+                             conversation["user2_id"], 
+                             request.form["text"], 
+                             int(time.time()), 
+                             0)
+        return redirect('/conv_view/'+conv_id)
+            
+    messages = database.query_db("select * from message where conversation_id=? order by message_timestamp desc",
+                                 [conv_id])
+    
+    return render_template('conv_view.html', conversation=conversation, messages=messages) 
 
 # --------------------------------------------------------------------------
 # USER LIST PAGE (FOR DEBUGGING)
