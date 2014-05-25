@@ -1,5 +1,6 @@
-import sqlite3
+from sqlite3 import dbapi2 as sqlite3
 from flask import g
+import time
 from Parcel import app
 
 def init_db():
@@ -30,6 +31,15 @@ def insert_into(table, fields, args=[]):
     db.execute('INSERT INTO ' + table +" ("+ ','.join(fields) + ') VALUES (' + ','.join(['?' for x in xrange(len(args))]) + ')', args)
     db.commit()
 
+def replace_message(text, conversation_id,sender,receiver):
+    db = get_db()
+    max_id =  db.execute("SELECT max(message_id) from message where conversation_id = ?",[conversation_id]).next()[0]
+    if max_id is None:
+        add_message(conversation_id,sender,receiver,text,time.time(),0)
+    else:
+        db.execute("UPDATE message SET message_text=? WHERE message_id = ?",[text,max_id])
+        db.commit()
+
 
 def add_user(username, email, pw_hash, timezone):
     insert_into('user', ['username','email', 'pw_hash', 'timezone'],[username, email, pw_hash, timezone])
@@ -37,6 +47,7 @@ def add_user(username, email, pw_hash, timezone):
 
 def add_conversation(user1_id, user2_id, title, conversation_timestamp):
     insert_into('conversation',['user1_id','user2_id', 'title','conversation_timestamp'] ,[user1_id, user2_id, title, conversation_timestamp])
+
 
 def get_users_conversations(user_id):
     return query_db("select * from conversation where user_id = ? or user2_id = ?",[user_id,user_id])

@@ -154,20 +154,24 @@ def conv_view(conv_id=None):
 
     # posting a draft
     if request.method == 'POST':
-        database.add_message(conv_id,
-                             g.user["user_id"],
-                             conversation["user2_id"],
-                             request.form["text"],
-                             int(time.time()),
-                             0)
+        database.replace_message(request.form["text"],conv_id,g.user["user_id"],conversation["user2_id"])
+        # database.add_message(conv_id,
+        #                      g.user["user_id"],
+        #                      conversation["user2_id"],
+        #                      request.form["text"],
+        #                      int(time.time()),
+        #                      0)
         return redirect('/conv_view/'+conv_id)
 
     messages = database.query_db("select * from message where conversation_id=? order by message_timestamp desc",
                                  [conv_id])
-    for num,message in enumerate(messages):
-        print conversation['conversation_timestamp'] + (num * datetime.timedelta(days=7).total_seconds()) > time.time()
+    hide_editor=False
+    if len(messages)>0:
+        if messages[0]['sender_id'] != g.user['user_id']:#Hide draft post if use does not own it
+            messages.pop(0)
+            hide_editor = True
 
-    return render_template('conv_view.html', conversation=conversation, messages=messages)
+    return render_template('conv_view.html', conversation=conversation, messages=messages, hide_editor=hide_editor)
 
 # --------------------------------------------------------------------------
 # USER LIST PAGE (FOR DEBUGGING)
@@ -191,4 +195,4 @@ def page_not_found(error):
     return error
 
 if __name__ == '__main__':
-        app.run()
+        app.run(debug = True    )

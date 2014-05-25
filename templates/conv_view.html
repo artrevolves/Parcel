@@ -6,12 +6,15 @@
 	<a href="{{url_for('conv_list_page')}}">&lt; Back to conversation list</a>
 	
     <h2>Conversation ID #{{ conversation['conversation_id'] }}: {{ conversation['title'] }}</h2>
-	
-	<form action="" method="POST">
-		<p><textarea rows="4" cols="50" name="text"></textarea></p>
-		<p><input type="submit" value="Save draft"></p>
-	</form>
-    
+
+	{% if hide_editor %}
+        You have to wait for your friend to submit a post
+    {%else%}
+        <form action="" method="POST">
+            <p><textarea rows="4" cols="50" name="text"></textarea></p>
+            <p><input type="submit" value="Save draft"></p>
+        </form>
+    {%endif%}
 	{% for message in messages %}
 		<p>
 			<b>From {{ message['sender_id'] | username_from_id }} at 
