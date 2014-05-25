@@ -162,7 +162,7 @@ def conv_view(conv_id=None):
 
     hide_editor=False
     if len(messages)>0:
-        if messages[0]['message_timestamp'] + datetime.timedelta(days=7).total_seconds() > time.time():
+        if time.time() > messages[0]['message_timestamp'] + datetime.timedelta(days=7).total_seconds():
             database.add_message(conv_id,messages[0]['receiver_id'],messages[0]['sender_id'],"Put a cool message here",time.time(),0)
         if messages[0]['sender_id'] != g.user['user_id']:#Hide draft post if use does not own it
             messages.pop(0)

@@ -4,11 +4,11 @@
 
 {% block body %}
         <h2>{{ g.user['username'] }}'s conversations</h2>
-		<a href="{{url_for('conv_add_page')}}">Add a conversation</a>
+		<p>	<a href="{{url_for('conv_add_page')}}">Add a conversation</a></p>
 		
         {% for item in conversations %}
-			<p>
-				<b>{{ item['title'] }}</b><br>
+			<h5>{{ item['title'] }}</h5>
+			<p>	
 				<b>Recipient: </b>{{ item['user2_id'] | username_from_id }}<br>
 				<b>Post day: </b>{{ item['conversation_timestamp'] | pretty_date }}<br>
 				<a href="/conv_view/{{ item['conversation_id'] }}">View</a>
