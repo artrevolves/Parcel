@@ -72,7 +72,7 @@ def login_page():
     # if user is logged in, don't let them see the page at all
     if g.user: return show_message('You have already been logged in, ' + g.user['username'])
     
-    if request.method=='POST':
+    if request.method == 'POST':
         user = database.query_db('select * from user where username=?', 
                                  [request.form['username']], one=True)
                                  
@@ -83,7 +83,7 @@ def login_page():
             return render_template('login.html', error="Username or password is incorrect")
 
         session['user_id'] = user['user_id']
-        return show_message("Oh hai " + str(user['username']))
+        return redirect(url_for("conv_list_page"))
         
     return render_template('login.html')
 
@@ -93,8 +93,65 @@ def login_page():
 @app.route('/logout')
 def logout_page():
     session.pop('user_id', None)
-    return show_message("You have successfully logged yourself out!")
+    return redirect(url_for("home_page"))
 
+# --------------------------------------------------------------------------
+# CONVERSATION LIST PAGE
+# --------------------------------------------------------------------------
+@app.route('/conversations')
+def conv_list_page():
+    if not g.user: return show_message('You need to be logged in to see this page.')
+    
+    items = database.query_db("select * from conversation where user1_id=? or user2_id=?", 
+    [g.user['user_id'], g.user['user_id']])
+    return render_template('conv_list.html', conversations=items)
+    
+# --------------------------------------------------------------------------
+# CONVERSATION ADDING PAGE
+# --------------------------------------------------------------------------
+@app.route('/conv_add', methods=['GET', 'POST'])
+def conv_add_page():
+    if not g.user: return show_message('You need to be logged in to see this page.')
+    
+    if request.method == 'POST':
+        if not request.form['title']:
+            return render_template('conv_add.html', error="Please name your conversation")
+        elif not request.form['recipient']:
+            return render_template('conv_add.html', error="You need someone else in this conversation")
+        elif not request.form['post_day'] or not request.form['post_time']:
+            return render_template('conv_add.html', error="You need to specify some time to post")
+
+        id = database.query_db("select user_id from user where username=?", [request.form['recipient']], one=True)
+        if not id:
+            return render_template('conv_add.html', error="Recipient username does not exist")
+        else: 
+            id = id[0]
+        
+        database.add_conversation(g.user['user_id'], id, request.form['title'], request.form['post_day'], request.form['post_time'])
+        
+        return redirect(url_for("conv_list_page"))
+        
+    return render_template('conv_add.html') 
+
+# --------------------------------------------------------------------------
+# CONVERSATION VIEW PAGE
+# --------------------------------------------------------------------------
+@app.route('/conv_view/<conv_id>', methods=['GET', 'POST'])
+def conv_view(conv_id=None):
+    if not g.user: return show_message('You need to be logged in to see this page.')
+
+    if request.method == 'POST':
+        return show_message('FFFFFFFFFFFFFUUUUUUUUUUUUUUUUUUU.')
+        
+    return show_message('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA.')
+
+# --------------------------------------------------------------------------
+# USER LIST PAGE (FOR DEBUGGING)
+# --------------------------------------------------------------------------
+@app.route('/user_list')
+def show_user_list(message=None):
+    return render_template("user_list.html", users=database.query_db("select * from user"))
+    
 # --------------------------------------------------------------------------
 # MESSAGE PAGE (FOR DEBUGGING)
 # --------------------------------------------------------------------------

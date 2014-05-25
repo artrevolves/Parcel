@@ -1,0 +1,16 @@
+{% extends "default.html" %}
+{% block title %} Add conversation {% endblock %}
+{% block body %}
+        <p> Add a conversation now or something I don't know </p>
+        {% if error %} <div class="error"> {{ error }} </div> {% endif %}
+        <form action="" method="POST">
+
+        <p> title <input type="text" name="title"></p>
+        <p> recipient <input type="text" name="recipient"></p>
+        <p> post day <input type="text" name="post_day"></p>
+        <p> post time <input type="text" name="post_time"></p>
+		</p>
+            <p><input type="submit" value="Add conversation"></p>
+
+        </form>
+{% endblock %}

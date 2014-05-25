@@ -1,0 +1,10 @@
+{% extends "default.html" %}
+{% block title %} User list {% endblock %}
+{% block body %}
+        <p>For the benefit of the NSA</p>
+        {% for user in users %}
+		<p><b>username: </b>{{ user['username'] }}<br>
+		<b>email: </b>{{ user['email'] }}<br>
+		<b>timezone: </b>{{ user['timezone'] }}<br></p>
+		{% endfor %}
+{% endblock %}
