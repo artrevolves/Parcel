@@ -155,18 +155,15 @@ def conv_view(conv_id=None):
     # posting a draft
     if request.method == 'POST':
         database.replace_message(request.form["text"],conv_id,g.user["user_id"],conversation["user2_id"])
-        # database.add_message(conv_id,
-        #                      g.user["user_id"],
-        #                      conversation["user2_id"],
-        #                      request.form["text"],
-        #                      int(time.time()),
-        #                      0)
         return redirect('/conv_view/'+conv_id)
 
     messages = database.query_db("select * from message where conversation_id=? order by message_timestamp desc",
                                  [conv_id])
+
     hide_editor=False
     if len(messages)>0:
+        if messages[0]['message_timestamp'] + datetime.timedelta(days=7).total_seconds() > time.time():
+            database.add_message(conv_id,messages[0]['receiver_id'],messages[0]['sender_id'],"Put a cool message here",time.time(),0)
         if messages[0]['sender_id'] != g.user['user_id']:#Hide draft post if use does not own it
             messages.pop(0)
             hide_editor = True
