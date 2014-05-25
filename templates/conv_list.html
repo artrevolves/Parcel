@@ -10,8 +10,7 @@
 			<p>
 				<b>{{ item['title'] }}</b><br>
 				<b>Recipient: </b>{{ item['user2_id'] | username_from_id }}<br>
-				<b>Post day: </b>{{ item['post_day'] }}<br>
-				<b>Post time: </b>{{ item['post_time'] }}<br>
+				<b>Post day: </b>{{ item['conversation_timestamp'] | pretty_date }}<br>
 				<a href="/conv_view/{{ item['conversation_id'] }}">View</a>
 			</p>
 		{% else %}

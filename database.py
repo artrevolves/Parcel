@@ -1,7 +1,6 @@
 import sqlite3
-from flask import Flask, g
+from flask import g
 from Parcel import app
-
 
 def init_db():
     with app.app_context():
@@ -36,9 +35,14 @@ def add_user(username, email, pw_hash, timezone):
     insert_into('user', ['username','email', 'pw_hash', 'timezone'],[username, email, pw_hash, timezone])
 
 
-def add_conversation(user1_id, user2_id, title, post_day, post_time):
-    insert_into('conversation',['user1_id','user2_id', 'title', 'post_day','post_time'] ,[user1_id, user2_id, title, post_day, post_time])
+def add_conversation(user1_id, user2_id, title, conversation_timestamp):
+    insert_into('conversation',['user1_id','user2_id', 'title','conversation_timestamp'] ,[user1_id, user2_id, title, conversation_timestamp])
 
+def get_users_conversations(user_id):
+    return query_db("select * from conversation where user_id = ? or user2_id = ?",[user_id,user_id])
+
+def get_conversation_messages(conversation_id):
+    return query_db("select * from message where conversation_id = ?", conversation_id)
 
 def add_message(conversation_id, sender_id, receiver_id, message_text, message_timestamp, is_draft):
     insert_into('message', ['conversation_id','sender_id', 'receiver_id', 'message_text','message_timestamp','is_draft'],[conversation_id, sender_id, receiver_id, message_text, message_timestamp, is_draft])

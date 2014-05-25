@@ -5,8 +5,7 @@
 
 from flask import Flask, render_template, redirect, url_for, request, g, session
 from werkzeug.security import generate_password_hash, check_password_hash
-import sqlite3
-from datetime import datetime
+import datetime
 import time
 
 import database
@@ -45,7 +44,7 @@ def username_from_id(id):
     
 @app.template_filter()
 def pretty_date(timestamp):
-    return datetime.utcfromtimestamp(timestamp).strftime("%m/%d/%Y %H:%M")
+    return datetime.datetime.utcfromtimestamp(timestamp).strftime("%m/%d/%Y %H:%M")
     
 # --------------------------------------------------------------------------
 # REGISTRATION PAGE
@@ -130,16 +129,14 @@ def conv_add_page():
             return render_template('conv_add.html', error="Please name your conversation")
         elif not request.form['recipient']:
             return render_template('conv_add.html', error="You need someone else in this conversation")
-        elif not request.form['post_day'] or not request.form['post_time']:
-            return render_template('conv_add.html', error="You need to specify some time to post")
 
         id = database.query_db("select user_id from user where username=?", [request.form['recipient']], one=True)
         if not id:
             return render_template('conv_add.html', error="Recipient username does not exist")
-        else: 
+        else:
             id = id[0]
         
-        database.add_conversation(g.user['user_id'], id, request.form['title'], request.form['post_day'], request.form['post_time'])
+        database.add_conversation(g.user['user_id'], id, request.form['title'], time.time())
         
         return redirect(url_for("conv_list_page"))
         
@@ -151,24 +148,26 @@ def conv_add_page():
 @app.route('/conv_view/<conv_id>', methods=['GET', 'POST'])
 def conv_view(conv_id=None):
     if not g.user: return show_message('You need to be logged in to see this page.')
-    
+
     conversation = database.query_db("select * from conversation where conversation_id=?",
-                                     [conv_id], one=True)   
-  
+                                     [conv_id], one=True)
+
     # posting a draft
     if request.method == 'POST':
-        database.add_message(conv_id, 
-                             g.user["user_id"], 
-                             conversation["user2_id"], 
-                             request.form["text"], 
-                             int(time.time()), 
+        database.add_message(conv_id,
+                             g.user["user_id"],
+                             conversation["user2_id"],
+                             request.form["text"],
+                             int(time.time()),
                              0)
         return redirect('/conv_view/'+conv_id)
-            
+
     messages = database.query_db("select * from message where conversation_id=? order by message_timestamp desc",
                                  [conv_id])
-    
-    return render_template('conv_view.html', conversation=conversation, messages=messages) 
+    for num,message in enumerate(messages):
+        print conversation['conversation_timestamp'] + (num * datetime.timedelta(days=7).total_seconds()) > time.time()
+
+    return render_template('conv_view.html', conversation=conversation, messages=messages)
 
 # --------------------------------------------------------------------------
 # USER LIST PAGE (FOR DEBUGGING)

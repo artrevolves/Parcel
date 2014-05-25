@@ -10,8 +10,7 @@ conversation_id integer primary key autoincrement,
 user1_id integer not null,
 user2_id integer not null,
 title text not null,
-post_day integer not null,
-post_time integer not null
+conversation_timestamp integer not null
 );
 create table message(
 message_id integer primary key autoincrement,
